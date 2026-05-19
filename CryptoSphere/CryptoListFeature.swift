@@ -1,0 +1,78 @@
+//
+//  CryptoListFeature.swift
+//  CryptoSphere
+//
+//  Created by Nurtore on 19.05.2026.
+//
+
+
+import ComposableArchitecture
+import Foundation
+
+struct CryptoListFeature: Reducer {
+    
+    @ObservableState
+    struct State: Equatable {
+        var coins: [Coin] = []
+        var isLoading = false
+        var errorMessage: String? = nil
+        
+        var myPortfolio: [String:Double] = [
+            "bitcoin":0.05,
+            "ethereum":1.12,
+            "tether":250.0
+        ]
+        
+        var totalBalanceUSD:Double  {
+            var total = 0.0
+            for coin in coins {
+                if let amountOwned = myPortfolio[coin.id] {
+                    total += coin.currentPrice * amountOwned
+                }
+            }
+            return total
+        }
+    }
+    
+    
+    enum Action {
+        case refreshButtonTapped
+        case fetchCoinsResponse(TaskResult<[Coin]>)
+    }
+
+    func reduce(into state: inout State, action: Action) -> Effect<Action> {
+        switch action {
+        case .refreshButtonTapped:
+            state.isLoading = true
+            state.errorMessage = nil
+            
+            return .run { send in
+                await send(.fetchCoinsResponse(TaskResult {
+                    let url = URL(string: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false")!
+                    
+                    let (data, response) = try await URLSession.shared.data(from: url)
+                    if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 429 {
+                        struct RateLimitError: Error, LocalizedError {
+                        }
+                        throw RateLimitError()
+                    }
+                    do {
+                        return try JSONDecoder().decode([Coin].self, from: data)
+                    } catch let decodingError {
+                        throw decodingError
+                    }
+                }))
+            }
+            
+        case let .fetchCoinsResponse(.success(coins)):
+            state.isLoading = false
+            state.coins = coins
+            return .none
+            
+        case let .fetchCoinsResponse(.failure(error)):
+            state.isLoading = false
+            state.errorMessage = "Не удалось загрузить данные: \(error.localizedDescription)"
+            return .none
+        }
+    }
+}
