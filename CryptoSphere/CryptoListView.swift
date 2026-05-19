@@ -79,14 +79,6 @@ struct CryptoListView: View {
                     .listStyle(.plain) 
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { store.send(.refreshButtonTapped) }) {
-                        Image(systemName: "arrow.clockwise")
-                    }
-                    .disabled(store.isLoading)
-                }
-            }
             .onAppear {
                 store.send(.refreshButtonTapped)
             }

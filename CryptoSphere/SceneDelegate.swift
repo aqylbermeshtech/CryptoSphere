@@ -21,16 +21,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        
-        // 1. Создаем Store для нашего TCA-экрана
+
         let store = Store(initialState: CryptoListFeature.State()) {
             CryptoListFeature()
         }
-        
-        // 2. Оборачиваем SwiftUI-вьюху вместе со стором в UIHostingController
-        let rootView = CryptoListView(store: store)
-        window.rootViewController = UIHostingController(rootView: rootView)
-        
+        _ = CryptoListView(store: store)
+        window.rootViewController = MainTabBarController()
         self.window = window
         window.makeKeyAndVisible()
     }

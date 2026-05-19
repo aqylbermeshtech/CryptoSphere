@@ -16,22 +16,6 @@ struct CryptoListFeature: Reducer {
         var coins: [Coin] = []
         var isLoading = false
         var errorMessage: String? = nil
-        
-        var myPortfolio: [String:Double] = [
-            "bitcoin":0.05,
-            "ethereum":1.12,
-            "tether":250.0
-        ]
-        
-        var totalBalanceUSD:Double  {
-            var total = 0.0
-            for coin in coins {
-                if let amountOwned = myPortfolio[coin.id] {
-                    total += coin.currentPrice * amountOwned
-                }
-            }
-            return total
-        }
     }
     
     
