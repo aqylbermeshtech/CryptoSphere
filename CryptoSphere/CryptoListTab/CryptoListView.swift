@@ -145,7 +145,7 @@ struct HeaderBalanceView: View {
 #Preview {
     CryptoListView(
         store: Store(initialState: CryptoListFeature.State(coins: [Coin.mock])) {
-            CryptoListFeature()
+//            CryptoListFeature()
         }
     )
 }

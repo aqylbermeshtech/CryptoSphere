@@ -29,6 +29,14 @@ class MainTabBarController: UITabBarController {
                 }
             )
         )
+        
+        let marketListView = UIHostingController(
+            rootView: MarketListView(
+                store: Store(initialState:MarketListFeature.State()) {
+                    MarketListFeature()
+                }
+            )
+        )
 
         viewControllers = [
             generateViewController(
