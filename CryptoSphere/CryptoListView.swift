@@ -9,85 +9,100 @@ import ComposableArchitecture
 import SwiftUI
 
 struct CryptoListView: View {
-    let store: StoreOf<CryptoListFeature>
+    @Bindable var store: StoreOf<CryptoListFeature>
     
     var body: some View {
         NavigationStack {
-            Group {
-                if store.isLoading && store.coins.isEmpty {
-                    ProgressView("Загрузка рынка...")
-                } else if let error = store.errorMessage {
-                    VStack(spacing: 16) {
-                        Text(error)
-                            .foregroundColor(.red)
-                            .multilineTextAlignment(.center)
-                        Button("Повторить") {
-                            store.send(.refreshButtonTapped)
-                        }
-                        .buttonStyle(.borderedProminent)
-                    }
-                    .padding()
-                }  else {
-                    List {
-                        Section {
-                            HeaderBalanceView(totalBalance: store.totalBalanceUSD)
-                        }
-                        .listRowInsets(EdgeInsets())
-                        .listRowBackground(Color.clear)
+            content
+                .onAppear {
+                    store.send(.refreshButtonTapped)
+                }
+        }
+    }
+    
+    @ViewBuilder
+    private var content: some View {
+        if store.isLoading && store.coins.isEmpty {
+            VStack {
+                ProgressView()
+                Text("Загрузка рынка...")
+                    .foregroundColor(.secondary)
+            }
+        } else if let error = store.errorMessage {
+            VStack(spacing: 16) {
+                Text(error)
+                    .foregroundColor(.red)
+                    .multilineTextAlignment(.center)
+                
+                Button("Повторить") {
+                    store.send(.refreshButtonTapped)
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding()
+        } else {
+            List {
+                Section {
+                    HeaderBalanceView()
+                }
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
 
-                        Section {
-                            
-                            Text("Trending Coins")
-                                    .font(.title2)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.primary)
-                                    .tracking(1.0)
-                                    .padding(.vertical, 4)
+                Section {
+                    Text("Trending Coins")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                        .tracking(1.0)
+                        .padding(.vertical, 4)
                     
+                    ForEach(store.coins) { coin in
+                        HStack(spacing: 16) {
+                            URLImage(urlString: coin.image)
+                                .frame(width: 40, height: 40)
+                                .clipShape(Circle())
                             
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(coin.name)
+                                    .font(.headline)
+                                Text(coin.symbol.uppercased())
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
                             
-                            ForEach(store.coins) { coin in
-                                HStack(spacing: 16) {
-                                    URLImage(urlString: coin.image)
-                                        .frame(width: 40, height: 40)
-                                        .clipShape(Circle())
+                            Spacer()
+                            
+                            let percentChange = coin.priceChangePercentage24h ?? 0.0
+                            let prices = coin.sparkLine?.price ?? []
                                     
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text(coin.name)
-                                            .font(.headline)
-                                        Text(coin.symbol.uppercased())
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondary)
-                                    }
+                            SparklineView(prices: prices, isPositive: percentChange >= 0)
+                                .frame(width: 60, height: 30)
+                                .padding(.horizontal, 8)
                                     
-                                    Spacer()
-                                    
-                                    VStack(alignment: .trailing, spacing: 4) {
-                                        Text(String(format: "$%.2f", coin.currentPrice))
-                                            .font(.system(.headline, design: .rounded))
-                    
-                                        let percentChange = coin.priceChangePercentage24h ?? 0.0
-                                        Text(String(format: "%.2f%%", percentChange))
-                                            .font(.subheadline)
-                                            .foregroundColor(percentChange >= 0 ? .green : .red)
-                                    }
-                                }
-                                .padding(.vertical, 4)
+                            Spacer()
+                            
+                            VStack(alignment: .trailing, spacing: 4) {
+                                Text(String(format: "$%.2f", coin.currentPrice))
+                                    .font(.system(.headline, design: .rounded))
+                            
+                                let percentChange = coin.priceChangePercentage24h ?? 0.0
+                                Text(String(format: "%.2f%%", percentChange))
+                                    .font(.subheadline)
+                                    .foregroundColor(percentChange >= 0 ? .green : .red)
                             }
                         }
+                        .padding(.vertical, 4)
                     }
-                    .listStyle(.plain) 
                 }
             }
-            .onAppear {
-                store.send(.refreshButtonTapped)
-            }
+            .listStyle(.plain)
         }
     }
 }
 
+// MARK: - Header Balance View
 struct HeaderBalanceView: View {
-    let totalBalance: Double
+
     
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -102,10 +117,10 @@ struct HeaderBalanceView: View {
                 .fontWeight(.semibold)
                 .foregroundColor(.white)
                 .tracking(1.0)
-                .fixedSize(horizontal: false, vertical: true)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
 
-            Button(action: {
-            }) {
+            Button(action: {}) {
                 Text("Invest today")
                     .fontWeight(.semibold)
                     .font(.headline)
@@ -120,15 +135,16 @@ struct HeaderBalanceView: View {
         .padding(20)
         .background(
             RoundedRectangle(cornerRadius: 24)
-                .fill(Color(uiColor: .blue))
+                .fill(Color.blue)
         )
         .padding(.horizontal, 16)
     }
 }
 
+// MARK: - Preview
 #Preview {
     CryptoListView(
-        store: Store(initialState: CryptoListFeature.State(coins: [.mock])) {
+        store: Store(initialState: CryptoListFeature.State(coins: [Coin.mock])) {
             CryptoListFeature()
         }
     )

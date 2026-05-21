@@ -1,21 +1,22 @@
 //
-//  CryptoListFeature.swift
+//  PortfolioListFeature.swift
 //  CryptoSphere
 //
-//  Created by Nurtore on 19.05.2026.
+//  Created by Nurtore on 21.05.2026.
 //
-
 
 import ComposableArchitecture
 import Foundation
 
-struct CryptoListFeature: Reducer {
+struct PortfolioListFeature: Reducer {
     
     @ObservableState
     struct State: Equatable {
         var coins: [Coin] = []
         var isLoading = false
         var errorMessage: String? = nil
+        
+        var totalBalanceUSD: Double = 0.0
         
     }
     
@@ -55,3 +56,6 @@ struct CryptoListFeature: Reducer {
         }
     }
 }
+
+
+

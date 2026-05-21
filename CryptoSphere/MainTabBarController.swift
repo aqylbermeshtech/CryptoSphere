@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import SwiftUI // Обязательно импортируем, чтобы использовать UIHostingController
+import SwiftUI
 import ComposableArchitecture
 
 class MainTabBarController: UITabBarController {
@@ -22,10 +22,14 @@ class MainTabBarController: UITabBarController {
                 }
             )
         )
+        let portfolioListView = UIHostingController(
+            rootView: PortfolioListView(
+                store: Store(initialState:PortfolioListFeature.State()) {
+                    PortfolioListFeature()
+                }
+            )
+        )
 
-        let portfolioView = UIViewController()
-        portfolioView.view.backgroundColor = .systemBackground
-        
         viewControllers = [
             generateViewController(
                 rootViewController: cryptoListView,
@@ -33,7 +37,7 @@ class MainTabBarController: UITabBarController {
                 title: "Home"
             ),
             generateViewController(
-                rootViewController: portfolioView,
+                rootViewController: portfolioListView,
                 image: UIImage(systemName: "chart.pie.fill") ?? UIImage(),
                 title: "Portfolio"
             )
