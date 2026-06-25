@@ -116,9 +116,6 @@ struct HeaderPortfolioView: View {
                     .foregroundColor(.white)
                     .tracking(1.0)
 
-                Text(String(format: "$%.2f", totalBalance))
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .foregroundColor(.white)
             }
             Divider()
                 .background(Color.white.opacity(0.2))
@@ -164,7 +161,6 @@ struct HeaderPortfolioView: View {
         .padding(.horizontal, 16)
     }
 }
-
 
 #Preview {
     PortfolioListView(
