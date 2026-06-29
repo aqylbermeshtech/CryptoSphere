@@ -29,7 +29,6 @@ class MainTabBarController: UITabBarController {
                 }
             )
         )
-        
         let marketListView = UIHostingController(
             rootView: MarketListView(
                 store: Store(initialState:MarketListFeature.State()) {
@@ -37,7 +36,6 @@ class MainTabBarController: UITabBarController {
                 }
             )
         )
-
         viewControllers = [
             generateViewController(
                 rootViewController: cryptoListView,
@@ -48,6 +46,11 @@ class MainTabBarController: UITabBarController {
                 rootViewController: portfolioListView,
                 image: UIImage(systemName: "chart.pie.fill") ?? UIImage(),
                 title: "Portfolio"
+            ),
+            generateViewController(
+                rootViewController: marketListView,
+                image: UIImage(systemName: "arrow.turn.up.forward.iphone") ?? UIImage(),
+                title: "Market"
             )
         ]
     }

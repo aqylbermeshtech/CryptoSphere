@@ -15,7 +15,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		81B536412FBC844D00B77424 /* Exceptions for "CryptoSphere" folder in "CryptoSphere" target */ = {
+		81FAB5A32FBEF42B00411B2B /* Exceptions for "CryptoSphere" folder in "CryptoSphere" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -28,7 +28,7 @@
 		81B536312FBC844B00B77424 /* CryptoSphere */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				81B536412FBC844D00B77424 /* Exceptions for "CryptoSphere" folder in "CryptoSphere" target */,
+				81FAB5A32FBEF42B00411B2B /* Exceptions for "CryptoSphere" folder in "CryptoSphere" target */,
 			);
 			path = CryptoSphere;
 			sourceTree = "<group>";

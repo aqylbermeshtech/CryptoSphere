@@ -10,15 +10,12 @@ import SwiftUI
 import ComposableArchitecture
 
 struct MarketListView: View {
-    
     let store: StoreOf<MarketListFeature>
-    
     @State private var selectedTab = "All"
     let tabs = ["All", "Gainer", "Loser", "Favourites"]
     
     var body: some View {
         NavigationStack {
-
             WithPerceptionTracking {
                 content
                     .background(Color(.systemGray6).opacity(0.4).ignoresSafeArea())

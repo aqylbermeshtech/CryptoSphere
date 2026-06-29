@@ -26,11 +26,9 @@ struct Coin: Identifiable, Codable, Equatable {
         case priceChangePercentage24h = "price_change_percentage_24h"
         case sparkLine = "sparkline_in_7d"
     }
-    
     struct SparklineData: Codable, Equatable {
         let price: [Double]
     }
-    
     static let mock = Coin(
         id: "bitcoin",
         name: "Bitcoin",
@@ -40,7 +38,6 @@ struct Coin: Identifiable, Codable, Equatable {
         sparkLine: SparklineData(price: [64000, 64200, 64100, 64500, 64800, 65000]),
         image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png"
     )
-    
     static let mockCoins: [Coin] = [
             Coin(
                 id: "bitcoin",

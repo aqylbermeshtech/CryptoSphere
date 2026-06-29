@@ -9,7 +9,6 @@ import ComposableArchitecture
 import Foundation
 
 struct MarketListFeature: Reducer {
-    
     @ObservableState
     struct State: Equatable {
         var coins: [Coin] = []
@@ -17,7 +16,6 @@ struct MarketListFeature: Reducer {
         var errorMessage: String? = nil
         
     }
-    
     enum Action {
         case refreshButtonTapped
         case fetchCoinsResponse(TaskResult<[Coin]>)
@@ -28,11 +26,9 @@ struct MarketListFeature: Reducer {
         case .refreshButtonTapped:
             state.isLoading = true
             state.errorMessage = nil
-            
             return .run { send in
                 await send(.fetchCoinsResponse(TaskResult {
                     let url = URL(string: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=true")!
-                    
                     let (data, response) = try await URLSession.shared.data(from: url)
                     if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 429 {
                         struct RateLimitError: Error, LocalizedError {}
@@ -46,7 +42,6 @@ struct MarketListFeature: Reducer {
             state.coins = fetchedCoins
             state.isLoading = false
             return .none
-            
         case let .fetchCoinsResponse(.failure(error)):
             state.isLoading = false
             state.errorMessage = "Не удалось загрузить данные: \(error.localizedDescription)"
