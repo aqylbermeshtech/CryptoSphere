@@ -1,5 +1,16 @@
 # CryptoSphere
 
+
+<div align="center">
+  <video src="https://github.com/user-attachments/assets/ae0e9097-935d-4e31-ab6a-591dc218bd22" controls width="300"></video>
+</div>
+
+
+
+
+
+
+
 CryptoSphere is a modern, reactive iOS cryptocurrency tracking application built with **SwiftUI** and powered by **The Composable Architecture (TCA)**. The app fetches real-time market data from the CoinGecko API, allowing users to track trending coins, view live prices, monitor 24-hour price fluctuations, and manage a simulated investment portfolio balance.
 
 ## Features
